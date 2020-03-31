@@ -1,9 +1,9 @@
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Schedule {
 	private int schedID;
-	private Date startTime;
-	private Date endTime;
+	private Timestamp startTime;
+	private Timestamp endTime;
 	private String dateShowing;
 	private Seat seat;
 	private Movie movie;
@@ -13,7 +13,7 @@ public class Schedule {
 	public void computeEndTime(int movieDuration) {
 		int min = (this.startTime.getMinutes() + movieDuration)%60;
 		int hour = this.startTime.getHours() + (this.startTime.getMinutes() + movieDuration)/60;
-		this.endTime = (Date) getStartTime().clone();
+		this.endTime = (Timestamp) getStartTime().clone();
 		this.endTime.setHours(hour);
 		this.endTime.setMinutes(min);
 	}
@@ -24,16 +24,16 @@ public class Schedule {
 	public void setSchedID(int schedID) {
 		this.schedID = schedID;
 	}
-	public Date getStartTime() {
+	public Timestamp getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(Date startTime) {
+	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
-	public Date getEndTime() {
+	public Timestamp getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(Date endTime) {
+	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
 	}
 	public String getDateShowing() {

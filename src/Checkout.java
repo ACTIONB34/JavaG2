@@ -14,13 +14,17 @@ public class Checkout {
 		totalAmount = 0;
 	}
 	
-	public void addTicket(String ticketType, int ticketCount) {
-		ticketTypes.add(ticketType);
-		ticketCounts.add(ticketCount);
+	public void addTicket(String ticketType, int ticketCount, int rate) {
+		if(ticketTypes.contains(ticketType)) {								//if ticketType already exists
+			int index = ticketTypes.indexOf(ticketType);
+			ticketCounts.set(index, ticketCounts.get(index) + ticketCount);
+		}else {																//else, add a new ticketType
+			ticketTypes.add(ticketType);
+			ticketCounts.add(ticketCount);
+		}
 		
 		ticketQuantity += ticketCount;
-		//100 is to be modified depending if kid,
-		totalAmount += ticketCount * 100;
+		totalAmount += ticketCount * rate;
 	}
 	
 	public void removeTicket(String ticketType, int ticketCount) {

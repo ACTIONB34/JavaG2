@@ -3,8 +3,9 @@ public class Cinema {
 	private int cinemaId;
 	private int capacity;
 	
-	Cinema(){
-		
+	public Cinema(int cinemaId, int capacity){
+		setCinemaId(cinemaId);
+		setCapacity(capacity);
 	}
 
 	public int getCinemaId() {
