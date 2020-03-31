@@ -18,7 +18,7 @@ public class MRSystem {
 		    rs = smt.executeQuery("select * from pets;");
 		    
 		    while(rs.next()) {
-		    	System.out.println(rs.getString(2));
+		    	System.out.println(rs.getString(3));
 		    }
 		    
 		} catch (SQLException ex) {
