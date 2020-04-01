@@ -5,5 +5,6 @@ public class MRSystem {
 		DBConnection dbc = new DBConnection();
 		Connection conn = dbc.getConnection();
 		dbc.excecuteAndPrint("select movie_id as id, title, length, description from movies","title", 50, "title", "length", "id", "description");
+		dbc.close();
 	}
 }

@@ -8,5 +8,6 @@ public class Senior extends Guest {
 
 	public Senior(String initName, double initRate) {
 		super(initName, initRate);
+		super.setType(super.KID);
 	}
 }

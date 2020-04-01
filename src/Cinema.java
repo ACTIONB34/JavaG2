@@ -1,10 +1,12 @@
 
 public class Cinema {
 	private int cinemaId;
+	private int cinemaNum;
 	private int capacity;
 	
-	public Cinema(int cinemaId, int capacity){
+	public Cinema(int cinemaId, int cinemaNum, int capacity){
 		setCinemaId(cinemaId);
+		setCinemaNum(cinemaNum);
 		setCapacity(capacity);
 	}
 
@@ -22,5 +24,13 @@ public class Cinema {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	public int getCinemaNum() {
+		return cinemaNum;
+	}
+
+	public void setCinemaNum(int cinemaNum) {
+		this.cinemaNum = cinemaNum;
 	}
 }

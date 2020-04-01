@@ -16,7 +16,6 @@ public class Reservation {
 	
 	public void setReservation_id(int reservationId) {
 		this.reservationId = reservationId;
-		
 	}
 	
 	public Seat getSeat() {

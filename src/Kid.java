@@ -8,5 +8,6 @@ public class Kid extends Guest {
 
 	public Kid(String initName, double initRate) {
 		super(initName, initRate);
+		super.setType(super.KID);
 	}
 }
