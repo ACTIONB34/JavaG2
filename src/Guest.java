@@ -1,8 +1,8 @@
 
 public class Guest {
-	final public int REGULAR = 1;
-	final public int KID = 2;
-	final public int SENIOR = 3;	
+	final static public int REGULAR = 1;
+	final static public int KID = 2;
+	final static public int SENIOR = 3;	
 	
 	private String name;
 	private int type;

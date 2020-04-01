@@ -6,7 +6,8 @@ public class Schedule {
 	private Date endTime;
 	private Seat seat;
 	private Movie movie;
-	private Cinema cinema;	
+	private Cinema cinema;
+	
 	
 	@SuppressWarnings("deprecation")
 	public void computeEndTime(int movieDuration) {

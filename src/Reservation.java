@@ -5,6 +5,7 @@ public class Reservation {
 	private Timestamp timestamp;
 	private Guest guest;
 	private Seat seat;
+	private Schedule schedule;
 	
 	public Reservation() {
 		this.timestamp = getCurrentTimestamp();
@@ -44,5 +45,13 @@ public class Reservation {
 
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public Schedule getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(Schedule schedule) {
+		this.schedule = schedule;
 	}
 }
