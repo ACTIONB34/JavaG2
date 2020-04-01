@@ -17,7 +17,7 @@ public class DBConnection{
 									 "m.title AS 'Movie', s.movie_id AS mid, s.cinema_id AS cid " + 
 									 "FROM schedules AS s LEFT JOIN cinemas AS c ON s.cinema_id = c.cinema_id " + 
 									 "LEFT JOIN movies AS m ON s.movie_id = m.movie_id " + 
-									 "WHERE s.movie_id = ? AND CAST(s.sched_date AS DATETIME) BETWEEN ? AND ?";
+									 "WHERE s.movie_id = ? AND CAST(s.sched_date AS DATE) = ?";
 	final private String GET_SEATS = "SELECT r.seat AS 'Seat' FROM reservations AS r WHERE r.sched_id = ?";
 	
 	
@@ -195,12 +195,11 @@ public class DBConnection{
 	}
 	
 	
-	public ResultSet viewSched(Date date1, Date date2, int movieId, String... columns) {
+	public ResultSet viewSched(Date date, int movieId, String... columns) {
 		try {
 			PreparedStatement ps = this.conn.prepareStatement(GET_SCHED);
 			ps.setInt(1, movieId);
-			ps.setDate(2, date1);
-			ps.setDate(3, date2);
+			ps.setDate(2, date);
 			rs = ps.executeQuery();
 		    for(String column: columns) {
 			    System.out.print(column.toUpperCase()+ "\t");

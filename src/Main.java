@@ -65,17 +65,17 @@ public class Main {
 				movie = new Movie(rs.getInt("id"), rs.getString("title"), rs.getString("description"), rs.getInt("length"), rs.getString("rating"));
 			}
 			
-			System.out.println("Date(yyyy-mm-dd): ");
+			System.out.print("Date(yyyy-mm-dd): ");
 			tempDate = scan.nextLine();
 			String[] dateArr = tempDate.split("-");
 		
 			dateToReserve = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]) - 1);
 			//System.out.println(dateToReserve.toString());
-			nextDay = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]));
+			//nextDay = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]));
 			//System.out.println(nextDay);
 			
 			System.out.println("--------------------------------------------------------------------------------");
-			dbc.viewSched(dateToReserve, nextDay, movieChoice, "Sched#", "Cinema", "Time Showing", "Movie");
+			rs = dbc.viewSched(dateToReserve, movieChoice, "Sched#", "Cinema", "Time Showing", "Movie");
 			System.out.println("--------------------------------------------------------------------------------");
 			System.out.print("Choose Sched#: ");
 			schedNumber = scan.nextInt();
