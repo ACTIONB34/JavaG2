@@ -2,12 +2,19 @@ import java.sql.Timestamp;
 
 public class Reservation {
 	private int reservationId;
-	private Timestamp timestamp;
 	private Guest guest;
 	private Seat seat;
+	private Schedule schedule;
 	
 	public Reservation() {
-		this.timestamp = getCurrentTimestamp();
+		
+	}
+	
+	public Reservation(int initId, Guest initGuest, Seat initSeat, Schedule initSched) {
+		this.reservationId = initId;
+		this.guest = initGuest;
+		this.seat = initSeat;
+		this.schedule = initSched;
 	}
 	
 	public int getReservationId() {
@@ -38,12 +45,12 @@ public class Reservation {
 		return new Timestamp(System.currentTimeMillis());
 	}
 
-	public Timestamp getTimestamp() {
-		return timestamp;
+	public Schedule getSchedule() {
+		return schedule;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
+	public void setSchedule(Schedule schedule) {
+		this.schedule = schedule;
 	}
 	
 	

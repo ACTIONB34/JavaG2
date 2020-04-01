@@ -12,11 +12,12 @@ public class DBConnection{
 	final private String INSERT_CINEMA = "INSERT INTO cinema(cinema_num, capacity) VALUES (?, ?)";
 	final private String INSERT_MOVIES = "INSERT INTO movies(title, description, rating, length) VALUES (?,?,?,?)";
 	final private String INSERT_SCHEDULES = "INSERT INTO schedules(date, movie_id, cinema_id) VALUES (?,?,?)";
-	final private String INSERT_RESERVATIONS = "INSERT INTO reservations(reserv_date, seat, guest_name, guest_type, sched_id) VALUES (?,?,?,?,?)";
-	final private String GET_SCHED = "SELECT s.sched_id AS 'Sched#', c.cinema_num AS 'Cinema', CAST(s.sched_date AS TIME) AS 'Time Showing', m.title AS 'Movie' " + 
-									 "FROM schedules AS s INNER JOIN cinemas AS c ON s.cinema_id = c.cinema_id " + 
-									 "INNER JOIN movies AS m ON s.movie_id = m.movie_id " + 
-									 "WHERE CAST(s.sched_date AS DATE) BETWEEN ? AND ?";
+	final private String INSERT_RESERVATIONS = "INSERT INTO reservations(reserv_date, seat, guest_name, guest_type, sched_id) VALUES (NOW(),?,?,?,?)";
+	final private String GET_SCHED = "SELECT s.sched_id AS 'Sched#', c.cinema_num AS 'Cinema', CAST(s.sched_date AS TIME) AS 'Time Showing', " +
+									 "m.title AS 'Movie', s.movie_id AS mid, s.cinema_id AS cid " + 
+									 "FROM schedules AS s LEFT JOIN cinemas AS c ON s.cinema_id = c.cinema_id " + 
+									 "LEFT JOIN movies AS m ON s.movie_id = m.movie_id " + 
+									 "WHERE s.movie_id = ? AND CAST(s.sched_date AS DATETIME) BETWEEN ? AND ?";
 	final private String GET_SEATS = "SELECT r.seat AS 'Seat' FROM reservations AS r WHERE r.sched_id = ?";
 	
 	
@@ -157,15 +158,14 @@ public class DBConnection{
 		return returnValue;
 	}
 	
-	public int insertToDB(Reservation reservation, int schedId) {
+	public int insertToDB(Reservation reservation) {
 		int returnValue = -1;
 		
 		try {
-			this.psmt_reserv.setTimestamp(1, reservation.getCurrentTimestamp());
-			this.psmt_reserv.setString(2, reservation.getSeat().getSeatNum());
-			this.psmt_reserv.setString(3, reservation.getGuest().getName());
-			this.psmt_reserv.setInt(4, reservation.getGuest().getType());
-			this.psmt_reserv.setInt(5, schedId);
+			this.psmt_reserv.setString(1, reservation.getSeat().getSeatNum());
+			this.psmt_reserv.setString(2, reservation.getGuest().getName());
+			this.psmt_reserv.setInt(3, reservation.getGuest().getType());
+			this.psmt_reserv.setInt(4, reservation.getSchedule().getSchedID());
 			
 			returnValue = this.psmt_reserv.executeUpdate();
 		} catch (SQLException e) {
@@ -195,11 +195,12 @@ public class DBConnection{
 	}
 	
 	
-	public ResultSet viewSched(Date date, Date date2, String... columns) {
+	public ResultSet viewSched(Date date1, Date date2, int movieId, String... columns) {
 		try {
 			PreparedStatement ps = this.conn.prepareStatement(GET_SCHED);
-			ps.setDate(1, date);
-			ps.setDate(2, new Date(2020-1900, 4-1, 2));
+			ps.setInt(1, movieId);
+			ps.setDate(2, date1);
+			ps.setDate(3, date2);
 			rs = ps.executeQuery();
 		    for(String column: columns) {
 			    System.out.print(column.toUpperCase()+ "\t");
