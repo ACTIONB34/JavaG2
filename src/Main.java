@@ -1,13 +1,15 @@
 import java.sql.Connection;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.lang.*;
 
 public class Main {
 	public static void main(String[] args) {
 		DBConnection dbc = new DBConnection();
 		Connection conn = dbc.getConnection();
-		Scanner myObj = new Scanner(System.in);
+		Scanner scan = new Scanner(System.in);
 		
 		String[][] seats =  {
 								{"A1","A2","A3","A4","A5","A6","A7","A8"},
@@ -18,6 +20,12 @@ public class Main {
 							};
 		int schedNumber;
 		ArrayList<String> reservedSeats = new ArrayList<String>();
+		int movieChoice;
+		String tempDate;
+		Date dateToReserve;
+		int day;
+		Date nextDay;
+		
 		
 		int scheduleChoice;
 		int numberOfSeats;
@@ -36,12 +44,22 @@ public class Main {
 //		dbc.insertToDB(res, 56007);
 		
 		System.out.println("--------------------------------------------------------------------------------");
-		@SuppressWarnings("deprecation")
-		Date date = new Date(2020-1900, 4-1, 1);
-		dbc.viewSched(date, "Sched#", "Cinema", "Time Showing", "Movie");
+		dbc.excecuteAndPrint("select movie_id as id, title, length, description from movies","title", 50, "id", "title", "length", "description");
 		System.out.println("--------------------------------------------------------------------------------");
-		System.out.println("Choose Sched#: ");
-		schedNumber = myObj.nextInt();
+		System.out.print("Choose Movie ID: ");
+		movieChoice = scan.nextInt();
+		System.out.println("Date(yyyy-mm-dd): ");
+		tempDate = scan.nextLine();
+		dateToReserve = Date.valueOf(tempDate);
+		day = dateToReserve.getDate() + 1;
+		nextDay = Date.valueOf(tempDate);
+		System.out.println(nextDay);
+		
+		System.out.println("--------------------------------------------------------------------------------");
+//		dbc.viewSched(dateToReserve, "Sched#", "Cinema", "Time Showing", "Movie");
+		System.out.println("--------------------------------------------------------------------------------");
+		System.out.print("Choose Sched#: ");
+		schedNumber = scan.nextInt();
 		
 		reservedSeats = dbc.getSeats(schedNumber, "Seat");
 		for (String str : reservedSeats){

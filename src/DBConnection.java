@@ -89,7 +89,11 @@ public class DBConnection{
 					    	System.out.print("\t");
 				    	}
 		    		}else {
-				    	System.out.print(rs.getString(column) + "\t");
+		    			if((rs.getString(column)).length() > 64) {
+		    				System.out.print(rs.getString(column).substring(0, 60) + "...\t");
+		    			}else {
+		    				System.out.print(rs.getString(column) + "\t");
+		    			}
 		    		}
 		    	}
 		    	System.out.println();
@@ -191,7 +195,7 @@ public class DBConnection{
 	}
 	
 	
-	public ResultSet viewSched(Date date, String... columns) {
+	public ResultSet viewSched(Date date, Date date2, String... columns) {
 		try {
 			PreparedStatement ps = this.conn.prepareStatement(GET_SCHED);
 			ps.setDate(1, date);
