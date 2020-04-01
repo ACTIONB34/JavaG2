@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.Statement;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +13,10 @@ public class DBConnection{
 	final private String INSERT_SCHEDULES = "INSERT INTO schedules(date, movie_id, cinema_id) VALUES (?,?,?)";
 	final private String INSERT_RESERVATIONS = "INSERT INTO reservations(reserv_date, seat, guest_name,guest_type) VALUES (?,?,?,?)";
 	
+	final private String GET_SCHED = "SELECT c.cinema_num AS 'Cinema', m.title AS 'Movie' " + 
+			 "FROM schedules AS s INNER JOIN cinemas AS c ON s.cinema_id = c.cinema_id " + 
+			 "INNER JOIN movies AS m ON s.movie_id = m.movie_id " + 
+			 "WHERE s.sched_date = ?";
 	
 	private Connection conn;
 	private Statement smt;
@@ -179,5 +184,29 @@ public class DBConnection{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public ResultSet viewSched(Date date, String... columns) {
+		try {
+			PreparedStatement ps = this.conn.prepareStatement(GET_SCHED);
+			ps.setDate(1, date);
+		    for(String column: columns) {
+	    		
+			    System.out.print(column.toUpperCase()+ "\t");
+		    }
+	    	System.out.println();
+		    //rs.beforeFirst();
+		    while(rs.next()) {
+		    	for(String column: columns) {
+				    System.out.print(rs.getString(column) + "\t");
+		    	}
+		    	System.out.println();
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    return this.rs;
 	}
 }
