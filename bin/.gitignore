@@ -1,2 +1,10 @@
 /Checkout.class
 /Schedule.class
+/Cinema.class
+/Guest.class
+/Kid.class
+/Movie.class
+/Reservation.class
+/Seat.class
+/Senior.class
+/DBConnection.class
