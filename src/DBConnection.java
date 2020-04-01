@@ -129,7 +129,7 @@ public class DBConnection{
 			this.psmt_movie.setString(1, movie.getMovieTitle());
 			this.psmt_movie.setString(2, movie.getMovieDescription());
 			this.psmt_movie.setString(3, movie.getMovieRating());
-			this.psmt_movie.setInt(4, movie.getMovieDuration());
+			this.psmt_movie.setInt(4, movie.getMovieLength());
 			
 			returnValue = this.psmt_movie.executeUpdate();
 		} catch (SQLException e) {
