@@ -3,14 +3,14 @@ public class Movie {
 	private int movieId;
 	private String movieTitle;
 	private String movieDescription;
-	private int movieDuration;
+	private int movieLength;
 	private String movieRating;
 	
-	public Movie(int movieId, String movieTitle, String movieDescription, int movieDuration, String movieRating) {
+	public Movie(int movieId, String movieTitle, String movieDescription, int movieLength, String movieRating) {
 		this.movieId = movieId;
 		this.movieTitle = movieTitle;
 		this.movieDescription = movieDescription;
-		this.movieDuration = movieDuration;
+		this.movieLength = movieLength;
 		this.movieRating = movieRating;
 	}
 
@@ -38,12 +38,12 @@ public class Movie {
 		this.movieDescription = movieDescription;
 	}
 
-	public int getMovieDuration() {
-		return movieDuration;
+	public int getMovieLength() {
+		return movieLength;
 	}
 
-	public void setMovieDuration(int movieDuration) {
-		this.movieDuration = movieDuration;
+	public void setMovieLength(int movieLength) {
+		this.movieLength = movieLength;
 	}
 
 	public String getMovieRating() {
@@ -53,4 +53,6 @@ public class Movie {
 	public void setMovieRating(String movieRating) {
 		this.movieRating = movieRating;
 	}
+
+	
 }
