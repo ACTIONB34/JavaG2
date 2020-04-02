@@ -12,6 +12,12 @@ public class Guest {
 		this.name = new String();
 		this.type = this.REGULAR;
 		this.rate = 150;
+	}
+	
+	public Guest(String initName) {
+		this.name = initName;
+		this.type = this.REGULAR;
+		this.rate = 150;
 	}	
 
 	public Guest(String initName, double initRate) {

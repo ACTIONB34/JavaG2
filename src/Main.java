@@ -31,33 +31,40 @@ public class Main {
 		ResultSet rs;
 		
 		Scanner scan = new Scanner(System.in);
-		
-		Movie movie = new Movie();
-		Cinema cinema = new Cinema();
-		Schedule schedule = new Schedule();
-		Reservation reservation = new Reservation();
-		Guest guest = new Guest();
-		ArrayList<Seat> seatChoice = new ArrayList<Seat>();		
-		ArrayList<String> reservedSeats = new ArrayList<String>();
-		
-		int movieChoice = -1;
-		int scheduleChoice = -1;
-		int numberOfSeats = 40;
-		int numberOfSeatsToReserve = 0;
-		String tempDate = null;
-		Date dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
-		Seat[] currentSeats = Seat.seats;
-		
-		String confirmChoice = null;
-		String dateChoice = null;
+
 		
 		while(true) {
+			Movie movie = new Movie();
+			Cinema cinema = new Cinema();
+			Schedule schedule = new Schedule();
+			Reservation reservation = new Reservation();
+			ArrayList<Guest> guest = new ArrayList<Guest>();
+			ArrayList<Seat> seatChoice = new ArrayList<Seat>();		
+			ArrayList<String> reservedSeats = new ArrayList<String>();
+			
+			int movieChoice = -1;
+			int scheduleChoice = -1;
+			int numberOfSeats = 40;
+			int numberOfSeatsToReserve = 0;
+			int numOfKids = 0;
+			int numOfRegulars = 0;
+			int numOfSeniors = 0;
+			String tempDate = null;
+			String customerName = "";
+			Date dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
+			Seat[] currentSeats = Seat.seats;
+			
+			String confirmChoice = null;
+			String dateChoice = null;
+
 			
 			/*===========+===========+===========+===========+===========+===========*/
 			/*					  MAKE USER SELECT FROM MOVIE LIST					 */
 			/*===========+===========+===========+===========+===========+===========*/
 			
-			
+			System.out.println("===========+===========+===========+===========+===========+===========\n" + 
+							   "					            WELCOME								   \n" + 
+							   "===========+===========+===========+===========+===========+===========");	
 			System.out.println("SELECT A MOVIE");
 			System.out.println("--------------------------------------------------------------------------------");
 			rs = dbc.excecuteAndPrint("select movie_id as id, title, length, description, rating from movies","title",
@@ -95,8 +102,7 @@ public class Main {
 			rs = dbc.viewSched(dateToReserve, movieChoice, "Sched#", "Cinema", "Time Showing", "Movie");
 			System.out.println("--------------------------------------------------------------------------------");
 			System.out.print("Choose Sched#: ");
-			try {
-				scheduleChoice = Integer.parseInt(scan.nextLine());
+			try {				scheduleChoice = Integer.parseInt(scan.nextLine());
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 				System.out.println("ERROR: Invalid no. of seats");
@@ -117,7 +123,8 @@ public class Main {
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 				System.out.println("ERROR: Invalid no. of seats");
-			}
+			}			
+			
 			for(int i = 0; i < numberOfSeatsToReserve; i++) {
 				System.out.print("Seat #" + (i + 1) + ":\t");
 				seatChoice.add(new Seat(scan.nextLine()));
@@ -126,10 +133,25 @@ public class Main {
 			System.out.println("Specify no. guest(s) for each type");
 			System.out.println("--------------------------------------------------------------------------------");
 			System.out.print("No. of kid(s):\t");
-			numberOfSeats = scan.nextInt();
-			System.out.print("No. of regular(s):\t");
-			numberOfSeats += scan.nextInt();
-			System.out.print("No. of senior(s):\t");
+			try {
+				numOfKids = Integer.parseInt(scan.nextLine());
+				numberOfSeats = numOfKids;
+				for(int i = 0; i < numOfKids; i++) {
+					System.out.println("--------------------------------------------------------------------------------");
+					System.out.print("Name of Customer: ");
+					guest.add(new Kid(scan.nextLine()));
+					System.out.println("--------------------------------------------------------------------------------");
+				}
+				System.out.print("No. of regular(s):\t");
+				numOfRegulars = Integer.parseInt(scan.nextLine());
+				numberOfSeats += numOfRegulars;
+				System.out.print("No. of senior(s):\t");
+				numOfSeniors = Integer.parseInt(scan.nextLine());
+				numberOfSeats += numOfSeniors;
+			}catch(NumberFormatException e) {
+				e.printStackTrace();
+				System.out.println("ERROR: Invalid no. guests");
+			}
 			
 			
 //			System.out.println("--------------------------------------------------------------------------------");
