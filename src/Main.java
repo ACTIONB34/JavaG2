@@ -10,7 +10,8 @@ public class Main {
 		int index = 0; 
 		for(int i = 0; i < Seat.ROW; i++) {
 			for(int j= 0; j < Seat.COL; j++) {
-				System.out.print(seats[index++].getSeatNum() + "\t");
+				System.out.print(seats[index].getSeatNum() + "\t");
+				index++;
 			}
 			System.out.println();
 		}
@@ -55,15 +56,6 @@ public class Main {
 		String dateChoice = null;
 		
 		while(true) {
-
-//			Guest guest = new Guest("Chrissia",Guest.REGULAR,150);
-//			Seat seat = new Seat(-1, "C2");
-//			Reservation res = new Reservation();
-//			res.setGuest(guest);
-//			res.setSeat(seat);
-//			
-//			dbc.insertToDB(res, 56007);
-
 			
 			/*===========+===========+===========+===========+===========+===========*/
 			/*					  MAKE USER SELECT FROM MOVIE LIST					 */
@@ -131,14 +123,17 @@ public class Main {
 				System.out.println("ERROR: Invalid no. of seats");
 			}
 			for(int i = 0; i < numberOfSeatsToReserve; i++) {
-				System.out.println("Seat #" + (i + 1) + ": ");
+				System.out.print("Seat #" + (i + 1) + ":\t");
 				seatChoice.add(new Seat(scan.nextLine()));
 			}
-			System.out.println("\tKid(s): ");
+			System.out.println("--------------------------------------------------------------------------------");
+			System.out.println("Specify no. guest(s) for each type");
+			System.out.println("--------------------------------------------------------------------------------");
+			System.out.print("No. of kid(s):\t");
 			numberOfSeats = scan.nextInt();
-			System.out.println("\tRegular(s): ");
+			System.out.print("No. of regular(s):\t");
 			numberOfSeats += scan.nextInt();
-			System.out.println("\tSenior(s): ");
+			System.out.print("No. of senior(s):\t");
 			
 			
 //			System.out.println("--------------------------------------------------------------------------------");
