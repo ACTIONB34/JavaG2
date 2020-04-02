@@ -33,25 +33,21 @@ public class Main {
 		Scanner scan = new Scanner(System.in);
 		
 		Movie movie = new Movie();
-		Cinema cinema;
-		Seat seat;
-		Schedule schedule;
-		Reservation reservation;
-		
-		
+		Cinema cinema = new Cinema();
+		Schedule schedule = new Schedule();
+		Reservation reservation = new Reservation();
+		Guest guest = new Guest();
+		ArrayList<Seat> seatChoice = new ArrayList<Seat>();		
 		ArrayList<String> reservedSeats = new ArrayList<String>();
+		
 		int movieChoice = -1;
-		String tempDate = null;
-		Date dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
-		Seat[] currentSeats = Seat.seats;
-
-		int schedNumber = -1;
 		int scheduleChoice = -1;
 		int numberOfSeats = 40;
 		int numberOfSeatsToReserve = 0;
+		String tempDate = null;
+		Date dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
+		Seat[] currentSeats = Seat.seats;
 		
-		ArrayList<Seat> seatChoice = new ArrayList<Seat>();
-		String guestName = null;
 		String confirmChoice = null;
 		String dateChoice = null;
 		
@@ -100,13 +96,13 @@ public class Main {
 			System.out.println("--------------------------------------------------------------------------------");
 			System.out.print("Choose Sched#: ");
 			try {
-				schedNumber = Integer.parseInt(scan.nextLine());
+				scheduleChoice = Integer.parseInt(scan.nextLine());
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 				System.out.println("ERROR: Invalid no. of seats");
 			}
 			
-			reservedSeats = dbc.getSeats(schedNumber, "Seat");
+			reservedSeats = dbc.getSeats(scheduleChoice, "Seat");
 			updateSeats(reservedSeats, currentSeats);
 			
 

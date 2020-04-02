@@ -4,6 +4,12 @@ public class Cinema {
 	private int cinemaNum;
 	private int capacity;
 	
+	public Cinema(){
+		setCinemaId(-1);
+		setCinemaNum(-1);
+		setCapacity(40);
+	}
+	
 	public Cinema(int cinemaId, int cinemaNum, int capacity){
 		setCinemaId(cinemaId);
 		setCinemaNum(cinemaNum);
