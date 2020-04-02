@@ -6,6 +6,14 @@ public class Movie {
 	private int movieLength;
 	private String movieRating;
 	
+	public Movie() {
+		this.movieId = -1;
+		this.movieTitle = null;
+		this.movieDescription = null;
+		this.movieLength = 0;
+		this.movieRating = null;
+	}
+	
 	public Movie(int movieId, String movieTitle, String movieDescription, int movieLength, String movieRating) {
 		this.movieId = movieId;
 		this.movieTitle = movieTitle;
