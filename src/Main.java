@@ -128,8 +128,7 @@ public class Main {
 					}else {
 						System.out.println("Exiting...");
 						break start;
-					}
-					
+					}					
 				}catch(NumberFormatException e) {
 					e.printStackTrace();
 					System.out.println("ERROR: Invalid no. of seats");
