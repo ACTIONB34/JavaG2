@@ -29,7 +29,6 @@ public class DBConnection{
 	private PreparedStatement psmt_reserv;
 	private ResultSet rs;
 	
-	
 	public DBConnection() {
 
 		this.conn = null;
@@ -192,8 +191,7 @@ public class DBConnection{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
+	}	
 	
 	public ResultSet viewSched(Date date, int movieId, String... columns) {
 		try {
@@ -205,7 +203,6 @@ public class DBConnection{
 			    System.out.print(column.toUpperCase()+ "\t");
 		    }
 	    	System.out.println();
-		    //rs.beforeFirst();
 	    	if(rs.next()) {
 			    do{
 			    	for(String column: columns) {

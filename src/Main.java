@@ -148,17 +148,27 @@ public class Main {
 				System.out.println("--------------------------------------------------------------------------------");
 				System.out.print("No. of available seats: " + (numberOfSeats - reservedSeats.size()));
 				System.out.println("\n--------------------------------------------------------------------------------");
-				System.out.print("No. of seats to reserve: ");
-				try {
-					numberOfSeatsToReserve = Integer.parseInt(scan.nextLine());
-				}catch(NumberFormatException e) {
-					e.printStackTrace();
-					System.out.println("ERROR: Invalid no. of seats");
-				}			
+				tries = 0;
+				
+				getNumToReserve: while(true) {
+					try {
+						System.out.print("No. of seats to reserve: ");						
+						numberOfSeatsToReserve = Integer.parseInt(scan.nextLine());
+						break getNumToReserve;
+					}catch(NumberFormatException e) {
+						e.printStackTrace();
+						System.out.println("ERROR: Invalid no. of seats");
+						if(tries >= 3) {
+							System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+							break start;
+						}
+					}	
+				}		
 				
 				for(int i = 0; i < numberOfSeatsToReserve; i++) {
 					System.out.print("Seat #" + (i + 1) + ":\t");
 					seatChoices.add(new Seat(scan.nextLine()));
+					
 				}
 				System.out.println("--------------------------------------------------------------------------------");
 				System.out.println("Specify no. guest(s) for each type");
@@ -174,30 +184,23 @@ public class Main {
 						numberOfSeats -= numOfKids;
 						guestCount += numOfKids;
 						for(int m = 0; m < numOfKids; m++) {
-							//System.out.println("--------------------------------------------------------------------------------");
-							//System.out.print("Name of Customer: ");
-							guests.add(new Kid(scan.nextLine()));
-							//System.out.println("--------------------------------------------------------------------------------");
+							guests.add(new Kid(customerName));
 						}
 						if(guestCount != numberOfSeatsToReserve) {
 							System.out.print("No. of regular(s):\t");
 							numOfRegulars = Integer.parseInt(scan.nextLine());
-							numberOfSeats -= numOfRegulars;								//
+							numberOfSeats -= numOfRegulars;	
+							guestCount += numOfRegulars;
 							for(int n = 0; n < numOfRegulars; n++) {
-								//System.out.println("--------------------------------------------------------------------------------");
-								//System.out.print("Name of Customer: ");
-								guests.add(new Guest(scan.nextLine()));
-								//System.out.println("--------------------------------------------------------------------------------");
+								guests.add(new Guest(customerName));
 							}
 							if(guestCount != numberOfSeatsToReserve) {
 								System.out.print("No. of senior(s):\t");
 								numOfSeniors = Integer.parseInt(scan.nextLine());
 								numberOfSeats -= numOfSeniors;
+								guestCount += numOfSeniors;
 								for(int o = 0; o < numOfSeniors; o++) {
-									//System.out.println("--------------------------------------------------------------------------------");
-									//System.out.print("Name of Customer: ");
-									guests.add(new Senior(scan.nextLine()));
-									//System.out.println("--------------------------------------------------------------------------------");
+									guests.add(new Senior(customerName));
 								}
 							}
 						}
@@ -256,8 +259,11 @@ public class Main {
 						System.out.println("--------------------------------------------------------------------------------");
 						System.out.print("Name of Customer: ");
 						customerName = scan.nextLine();
-						for(Guest guest: guests) {
+						
+						for(int i = 0; i < guests.size(); i++) {
+							Guest guest = guests.get(i);
 							guest.setName(customerName);
+							reservation.setSeat(seatChoices.get(i));
 							reservation.setGuest(guest);
 							dbc.insertToDB(reservation);
 						}
@@ -278,118 +284,6 @@ public class Main {
 					}
 				}				
 			}
-			
-			
-			
-			
-//			System.out.println("--------------------------------------------------------------------------------");
-//			System.out.println("**input 0 to go back to last page");
-//			System.out.println("Title:\t\tMovieTitle");								//Needs conversion to actual class
-//			System.out.println("Director:\tMovieDirector");							//Needs conversion to actual class
-//			System.out.println("Schedule #\t\tCinema #\t\tDate & Time Slot");
-//			for(int i = 1; i <= 3; i++) {		//Dapat mu end sa number of items
-//				System.out.print(i + "\t\t\tCinema " + i + "\t\tDate & Time Slot" + i + "\n");	//Needs conversion to actual class
-//			}
-//			System.out.println("--------------------------------------------------------------------------------");
-//			System.out.println("Choose Schedule #: ");
-//			scheduleChoice = myObj.nextInt();
-//			
-//			System.out.println("--------------------------------------------------------------------------------");
-//			System.out.println("# of seats");
-//			System.out.println("\tKid(s): ");
-//			numberOfSeats = myObj.nextInt();
-//			System.out.println("\tRegular(s): ");
-//			numberOfSeats += myObj.nextInt();
-//			System.out.println("\tSenior(s): ");
-//			numberOfSeats += myObj.nextInt();
-//			myObj.nextLine();
-//			System.out.println("--------------------------------------------------------------------------------");
-//			
-//			System.out.println("--------------------------------------------------------------------------------");
-//			System.out.println("Title:\t\tMovieTitle");								//Needs conversion to actual class
-//			System.out.println("Cinema #\tDate & Time Slot #");						//Needs conversion to actual class
-//			System.out.println("Seats");
-//			for(int i = 0; i <= 5; i++) {											//Prints the seating table
-//				for(int j = 0; j <= 8; j++) {										//No reserved seats yet
-//					if(i == 0)
-//						System.out.print(j + "\t");
-//					else {
-//						System.out.print("\t" + (char)('A' + (i - 1)) + (j + 1));
-//						if(j == 7)
-//							break;
-//					}
-//				}
-//				if(i != 5)
-//					System.out.print("\n" + (char)('A' + i));
-//			}
-//			System.out.println("\n--------------------------------------------------------------------------------");
-//			
-//			while(inputSeatCount < numberOfSeats) {	
-//				System.out.println("Seat " + (++inputSeatCount) + ": ");
-//				seatTemp = scan.next();
-//
-//				if(!seatTemp.equalsIgnoreCase("x")){
-//					seatChoice.add(seatTemp);
-//				}
-//				else {
-//					if( seatChoice.size() > 0 )
-//						seatChoice.remove( seatChoice.size() - 1 );
-//					inputSeatCount -= inputSeatCount;
-//				}
-//			}
-//			
-//			System.out.println("----------------------------------------------------------------------------------");
-//			System.out.println("**input 0 to go back to last page");
-//			System.out.println("Title\tMovieTitle");								//Needs conversion to actual class
-//			System.out.println("Date & Time Slot#");								//Needs conversion to actual class
-//			System.out.println("Cinema#");											//Needs conversion to actual class
-//			System.out.println("Seat #: ");
-//			for(String i : seatChoice) {
-//				System.out.print(i + ", ");
-//			}
-//			System.out.println("\nGuest name: ");
-//			guestName = myObj.nextLine();											//Gets name, dummy variable
-//			System.out.println("Confirm (Y/N): ");
-//			confirmChoice = myObj.nextLine();										//Lacking function if confirmation == N
-//			System.out.println("----------------------------------------------------------------------------------");
-//			
-//			System.out.println("----------------------------------------------------------------------------------");
-//			System.out.println("CHECKOUT");
-//			System.out.println("Subtotal:\t\t# of Tickets\t\tPrice");
-//			System.out.println("\tKid(s):\t\t#ofKid(s)\tx\tEachPrice");				//Needs conversion to actual class
-//			System.out.println("\tRegular(s):\t#ofRegular(s)\tx\tEachPrice");		//Needs conversion to actual class
-//			System.out.println("\tSenior(s):\t#ofSenior(s)\tx\tEachPrice");			//Needs conversion to actual class
-//			System.out.println("Total: TotalPrice");								//Needs conversion to actual class
-//			System.out.println("----------------------------------------------------------------------------------");
-//			
-//			System.out.println("----------------------------------------------------------------------------------");
-//			System.out.println("Seat # ");
-//			for(String i : seatChoice) {
-//				System.out.print(i);
-//				if(i != null)
-//					System.out.print(", ");
-//			}
-//			System.out.println("\n----------------------------------------------------------------------------------");
-//			System.out.println("Title:\t\tMovieTitle");								//Needs conversion to actual class
-//			System.out.println("Cinema #\tDate & Time Slot #");						//Needs conversion to actual class
-//			System.out.println("Seats");
-//			for(int i = 0; i <= 5; i++) {											//Prints the seating table
-//				for(int j = 0; j <= 8; j++) {										//No reserved seats yet
-//					if(i == 0)
-//						System.out.print(j + "\t");
-//					else {
-//						System.out.print("\t" + (char)('A' + (i - 1)) + (j + 1));
-//						if(j == 7)
-//							break;
-//					}
-//				}
-//				if(i != 5)
-//					System.out.print("\n" + (char)('A' + i));
-//			}
-//			System.out.println("\n----------------------------------------------------------------------------------");
-//			
-//			System.out.println("End");
-		}
-		
+		}		
 	}
 }
