@@ -73,26 +73,30 @@ public class Main {
 					 44, "id", "title", "length", "description");
 				System.out.println("--------------------------------------------------------------------------------------------------------------");
 				System.out.print("YOUR CHOICE: ");
-				movieChoice = Integer.parseInt(scan.nextLine());
 				
 				tries = 0;
 				getMovie: while(true) {
 					try {
-						rs.beforeFirst();
+						movieChoice = Integer.parseInt(scan.nextLine());
+						
 						if(rs.next()) {
-							reservation.getSchedule().setMovie(new Movie(rs.getInt("id"), rs.getString("title"), 
-															rs.getString("description"), rs.getInt("length"),
-															rs.getString("rating")));
+							if(rs.getInt("id") == movieChoice) {
+								reservation.setSchedule(new Schedule());
+								reservation.getSchedule().setMovie(new Movie(rs.getInt("id"), rs.getString("title"), 
+																rs.getString("description"), rs.getInt("length"),
+																rs.getString("rating")));
+							}
 						}
 						break getMovie;
-					} catch (SQLException e) {
-						e.printStackTrace();
+					}catch(NumberFormatException e) {
 						System.out.println("ERROR: Invalid movie id");
 						tries++;
 						if(tries >= 3) {
 							System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
 							break start;
 						}
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
 				}
 					
@@ -120,7 +124,9 @@ public class Main {
 					if(rs.next()) {
 						scheduleChoice = Integer.parseInt(scan.nextLine());
 						do{
-							if(rs.getInt("cid") == scheduleChoice) {
+							if(rs.getInt("Sched#") == scheduleChoice) {
+								reservation.getSchedule().setSchedID(scheduleChoice);
+								reservation.getSchedule().setCinema(new Cinema());
 								reservation.getSchedule().getCinema().setCinemaId(rs.getInt("cid"));
 								reservation.getSchedule().getCinema().setCinemaNum(rs.getInt("Cinema"));
 							}
@@ -139,8 +145,7 @@ public class Main {
 				}
 				
 				reservedSeats = dbc.getSeats(scheduleChoice, "Seat");
-				updateSeats(reservedSeats, currentSeats);
-				
+				updateSeats(reservedSeats, currentSeats);				
 		
 				System.out.println("--------------------------------------------------------------------------------");
 				printSeats(currentSeats);
@@ -227,21 +232,20 @@ public class Main {
 					totalAmount += guest.getRate();
 				}
 				
-				System.out.println("===========+===========+===========+===========" + 
-								   "\tTRANSACTION SUMMARY\n" + 
-								   "===========+===========+===========+===========");
-				System.out.println("Category\t\tRate\tQuantity\tAmount");
+				System.out.println("===========+===========+===========+===========\n" + 
+						   "\tTRANSACTION SUMMARY\n" + 
+						   "===========+===========+===========+===========");
+				System.out.println("Category\tRate\tQuantity\tAmount");
 				if(0 < numOfRegulars) {
-					System.out.print("Regular\t\t₱" + Guest.REGULAR_RATE + "\t"+ numOfKids +"\t₱ "+ Guest.REGULAR_RATE*numOfRegulars);
+					System.out.println("Regular\t\t" + Guest.REGULAR_RATE + "\t"+ numOfRegulars +"\t\t"+ Guest.REGULAR_RATE*numOfRegulars);
 				}
 				if(0 < numOfKids) {
-					System.out.print("Kid\t\t₱ " + Guest.KID_RATE + "\t"+ numOfKids +"\t₱ "+ Guest.KID_RATE*numOfKids);
+					System.out.println("Kid\t\t" + Guest.KID_RATE + "\t"+ numOfKids +"\t\t"+ Guest.KID_RATE*numOfKids);
 				}
 				if(0 < numOfSeniors) {
-					System.out.print("Senior\t\t₱ " + Guest.SENIOR_RATE + "\t"+ numOfKids +"\t₱ "+ Guest.KID_RATE*numOfSeniors);
+					System.out.println("Senior\t\t" + Guest.SENIOR_RATE + "\t"+ numOfSeniors +"\t\t"+ Guest.KID_RATE*numOfSeniors);
 				}
-				System.out.print("Total\t\t\t\t\t\t₱ "+ totalAmount);
-				
+				System.out.println("Total:\t\t\t\t\t"+ totalAmount);
 				
 				
 				/*===========+===========+===========+===========+===========+===========*/

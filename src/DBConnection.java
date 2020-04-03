@@ -14,7 +14,7 @@ public class DBConnection{
 	final private String INSERT_SCHEDULES = "INSERT INTO schedules(date, movie_id, cinema_id) VALUES (?,?,?)";
 	final private String INSERT_RESERVATIONS = "INSERT INTO reservations(reserv_date, seat, guest_name, guest_type, sched_id) VALUES (NOW(),?,?,?,?)";
 	final private String GET_SCHED = "SELECT s.sched_id AS 'Sched#', c.cinema_num AS 'Cinema', CAST(s.sched_date AS TIME) AS 'Time Showing', " +
-									 "m.title AS 'Movie', s.movie_id AS mid, s.cinema_id AS cid " + 
+									 "m.title AS 'Movie', s.movie_id AS 'mid', s.cinema_id AS 'cid' " + 
 									 "FROM schedules AS s INNER JOIN cinemas AS c ON s.cinema_id = c.cinema_id " + 
 									 "INNER JOIN movies AS m ON s.movie_id = m.movie_id " + 
 									 "WHERE s.movie_id = ? AND CAST(s.sched_date AS DATE) = ?";
@@ -98,10 +98,12 @@ public class DBConnection{
 		    	}
 		    	System.out.println();
 		    }
+			rs.beforeFirst();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	    
 	    return this.rs;
 	}
