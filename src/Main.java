@@ -115,7 +115,8 @@ public class Main {
 				String[] dateArr = tempDate.split("-");
 				
 				try {
-					dateToReserve = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]) - 2);
+					dateToReserve = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) - 1, Integer.parseInt(dateArr[2]) + 1);
+					System.out.println(dateToReserve);
 				}catch(NumberFormatException e) {
 					e.printStackTrace();
 					System.out.println("ERROR: Invalid date");
@@ -163,10 +164,27 @@ public class Main {
 					try {
 						System.out.print("No. of seats to reserve: ");						
 						numberOfSeatsToReserve = Integer.parseInt(scan.nextLine());
-						break getNumToReserve;
+						if(numberOfSeatsToReserve < 1) {
+							System.out.println("ERROR: Input a number greater than 0.");
+							if(tries >= 3) {
+								tries++;
+								System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+								break start;
+							}
+						}else if(numberOfSeatsToReserve > numberOfSeats){
+							System.out.println("ERROR: The number of seats you entered exceeds the remaining available seats. [Available Seats: " + numberOfSeats + "]");
+							if(tries >= 3) {
+								tries++;
+								System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+								break start;
+							}
+						}else {
+							break getNumToReserve;
+						}
 					}catch(NumberFormatException e) {
 						e.printStackTrace();
 						System.out.println("ERROR: Invalid no. of seats");
+						tries++;
 						if(tries >= 3) {
 							System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
 							break start;
@@ -175,7 +193,7 @@ public class Main {
 				}		
 				
 				for(int i = 0; i < numberOfSeatsToReserve; i++) {
-					System.out.print("Seat #" + (i + 1) + ":\t");
+					System.out.print("Seat #" + (i + 1) + ": ");
 					seatChoices.add(new Seat(scan.nextLine()));
 					
 				}
