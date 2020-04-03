@@ -227,7 +227,7 @@ public class Main {
 				System.out.println("===========+===========+===========+===========" + 
 								   "\tTRANSACTION SUMMARY\n" + 
 								   "===========+===========+===========+===========");
-				System.out.println("Category\t\tQuantity\tAmount");
+				System.out.println("Category\t\tRate\tQuantity\tAmount");
 				if(0 < numOfRegulars) {
 					System.out.print("Regular\t\t₱" + Guest.REGULAR_RATE + "\t"+ numOfKids +"\t₱ "+ Guest.REGULAR_RATE*numOfRegulars);
 				}
