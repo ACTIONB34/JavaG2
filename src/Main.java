@@ -49,11 +49,12 @@ public class Main {
 			int tries = 0;
 			int guestCount = 0;
 			int totalAmount = 0;
+			int inputSeatCount = 0;
 			String tempDate = null;
 			String customerName = "";
 			Date dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
 			Seat[] currentSeats = Seat.seats;
-			
+			String seatTemp = "";
 			String confirmChoice = null;
 			String dateChoice = null;
 
@@ -322,9 +323,19 @@ public class Main {
 //					System.out.print("\n" + (char)('A' + i));
 //			}
 //			System.out.println("\n--------------------------------------------------------------------------------");
-//			for(int i = 0; i < numberOfSeats; i++) {
-//				System.out.println("Seat " + (i + 1) + ": ");
-//				seatChoice.add(myObj.nextLine());
+//			
+//			while(inputSeatCount < numberOfSeats) {	
+//				System.out.println("Seat " + (++inputSeatCount) + ": ");
+//				seatTemp = scan.next();
+//
+//				if(!seatTemp.equalsIgnoreCase("x")){
+//					seatChoice.add(seatTemp);
+//				}
+//				else {
+//					if( seatChoice.size() > 0 )
+//						seatChoice.remove( seatChoice.size() - 1 );
+//					inputSeatCount -= inputSeatCount;
+//				}
 //			}
 //			
 //			System.out.println("----------------------------------------------------------------------------------");
