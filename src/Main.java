@@ -106,7 +106,7 @@ public class Main {
 				String[] dateArr = tempDate.split("-");
 				
 				try {
-					dateToReserve = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]) - 1);
+					dateToReserve = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]) - 2);
 				}catch(NumberFormatException e) {
 					e.printStackTrace();
 					System.out.println("ERROR: Invalid date");
