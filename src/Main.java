@@ -18,9 +18,11 @@ public class Main {
 	}
 	
 	private static void updateSeats(ArrayList<String> reservedSeats, Seat[] seats) {
-		for(String curr:reservedSeats) {
-			for(Seat seat: seats) {
-				if(seat.getSeatNum().equalsIgnoreCase(curr));
+		for(String curr: reservedSeats) {
+			for(int i = 0; i < seats.length; i++) {
+				if(seats[i].getSeatNum().equalsIgnoreCase(curr)) {
+					seats[i].setSeatNum("XX");
+				}
 			}
 		}
 	}
@@ -80,14 +82,17 @@ public class Main {
 						movieChoice = Integer.parseInt(scan.nextLine());
 						
 						if(rs.next()) {
-							if(rs.getInt("id") == movieChoice) {
-								reservation.setSchedule(new Schedule());
-								reservation.getSchedule().setMovie(new Movie(rs.getInt("id"), rs.getString("title"), 
-																rs.getString("description"), rs.getInt("length"),
-																rs.getString("rating")));
-							}
+							do{
+								if(rs.getInt("id") == movieChoice) {
+									reservation.setSchedule(new Schedule());
+									reservation.getSchedule().setMovie(new Movie(rs.getInt("id"), rs.getString("title"), 
+																	   rs.getString("description"), rs.getInt("length"),
+																	   rs.getString("rating")));
+
+									break getMovie;
+								}
+							}while(rs.next());
 						}
-						break getMovie;
 					}catch(NumberFormatException e) {
 						System.out.println("ERROR: Invalid movie id");
 						tries++;
@@ -233,7 +238,7 @@ public class Main {
 				}
 				
 				System.out.println("===========+===========+===========+===========\n" + 
-						   "\tTRANSACTION SUMMARY\n" + 
+						   "\t\tTRANSACTION SUMMARY\n" + 
 						   "===========+===========+===========+===========");
 				System.out.println("Category\tRate\tQuantity\tAmount");
 				if(0 < numOfRegulars) {

@@ -230,7 +230,9 @@ public class DBConnection{
 			rs = ps.executeQuery();
 
 	    	if(rs.next()) {
-	    		reservedSeats.add(rs.getString(column));
+	    		do{
+	    			reservedSeats.add(rs.getString(column));
+			    }while(rs.next());
 	    	}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
