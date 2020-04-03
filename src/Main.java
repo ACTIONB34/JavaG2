@@ -33,22 +33,22 @@ public class Main {
 		Scanner scan = new Scanner(System.in);
 
 		
-		while(true) {
-			Movie movie = new Movie();
-			Cinema cinema = new Cinema();
-			Schedule schedule = new Schedule();
+		init: while(true) {
 			Reservation reservation = new Reservation();
-			ArrayList<Guest> guest = new ArrayList<Guest>();
-			ArrayList<Seat> seatChoice = new ArrayList<Seat>();		
+			ArrayList<Guest> guests = new ArrayList<Guest>();
+			ArrayList<Seat> seatChoices = new ArrayList<Seat>();		
 			ArrayList<String> reservedSeats = new ArrayList<String>();
 			
 			int movieChoice = -1;
 			int scheduleChoice = -1;
 			int numberOfSeats = 40;
 			int numberOfSeatsToReserve = 0;
-			int numOfKids = 0;
-			int numOfRegulars = 0;
-			int numOfSeniors = 0;
+			int numOfKids;
+			int numOfRegulars;
+			int numOfSeniors;
+			int tries = 0;
+			int guestCount = 0;
+			int totalAmount = 0;
 			String tempDate = null;
 			String customerName = "";
 			Date dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
@@ -62,96 +62,223 @@ public class Main {
 			/*					  MAKE USER SELECT FROM MOVIE LIST					 */
 			/*===========+===========+===========+===========+===========+===========*/
 			
-			System.out.println("===========+===========+===========+===========+===========+===========\n" + 
-							   "					            WELCOME								   \n" + 
-							   "===========+===========+===========+===========+===========+===========");	
-			System.out.println("SELECT A MOVIE");
-			System.out.println("--------------------------------------------------------------------------------");
-			rs = dbc.excecuteAndPrint("select movie_id as id, title, length, description, rating from movies","title",
-				 50, "id", "title", "length", "description");
-			System.out.println("--------------------------------------------------------------------------------");
-			System.out.print("YOUR CHOICE: ");
-			movieChoice = Integer.parseInt(scan.nextLine());
-			movie = new Movie();
-			try {
-				if(rs.next()) {
-					movie = new Movie(rs.getInt("id"), rs.getString("title"), rs.getString("description"), rs.getInt("length"), rs.getString("rating"));
+			start:while(true) {
+				System.out.println("===========+===========\n" + 
+								   "\tWELCOME\n" + 
+								   "===========+===========\n");	
+				System.out.println("SELECT A MOVIE");
+				System.out.println("--------------------------------------------------------------------------------------------------------------");
+				rs = dbc.excecuteAndPrint("select movie_id as id, title, length, description, rating from movies","title",
+					 44, "id", "title", "length", "description");
+				System.out.println("--------------------------------------------------------------------------------------------------------------");
+				System.out.print("YOUR CHOICE: ");
+				movieChoice = Integer.parseInt(scan.nextLine());
+				
+				tries = 0;
+				getMovie: while(true) {
+					try {
+						rs.beforeFirst();
+						if(rs.next()) {
+							reservation.getSchedule().setMovie(new Movie(rs.getInt("id"), rs.getString("title"), 
+															rs.getString("description"), rs.getInt("length"),
+															rs.getString("rating")));
+						}
+						break getMovie;
+					} catch (SQLException e) {
+						e.printStackTrace();
+						System.out.println("ERROR: Invalid movie id");
+						tries++;
+						if(tries >= 3) {
+							System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+							break start;
+						}
+					}
 				}
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				System.out.println("ERROR: Invalid movie id");
-			}
+					
+				/*===========+===========+===========+===========+===========+===========*/
+				/*						    ASKS DATE FROM USER							 */
+				/*===========+===========+===========+===========+===========+===========*/
+					
+				System.out.println("--------------------------------------------------------------------------------");
+				System.out.print("Date(yyyy-mm-dd): ");
+				tempDate = scan.nextLine();
+				String[] dateArr = tempDate.split("-");
 				
-			/*===========+===========+===========+===========+===========+===========*/
-			/*						    ASKS DATE FROM USER							 */
-			/*===========+===========+===========+===========+===========+===========*/
+				try {
+					dateToReserve = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]) - 1);
+				}catch(NumberFormatException e) {
+					e.printStackTrace();
+					System.out.println("ERROR: Invalid date");
+				}	
+				System.out.println("--------------------------------------------------------------------------------");
+				rs = dbc.viewSched(dateToReserve, movieChoice, "Sched#", "Cinema", "Time Showing", "Movie");
+				System.out.println("--------------------------------------------------------------------------------");
 				
-			System.out.println("--------------------------------------------------------------------------------");
-			System.out.print("Date(yyyy-mm-dd): ");
-			tempDate = scan.nextLine();
-			String[] dateArr = tempDate.split("-");
-			
-			try {
-				dateToReserve = new Date(Integer.parseInt(dateArr[0]) - 1900, Integer.parseInt(dateArr[1]) -1, Integer.parseInt(dateArr[1]) - 1);
-			}catch(NumberFormatException e) {
-				e.printStackTrace();
-				System.out.println("ERROR: Invalid date");
-			}	
-			System.out.println("--------------------------------------------------------------------------------");
-			rs = dbc.viewSched(dateToReserve, movieChoice, "Sched#", "Cinema", "Time Showing", "Movie");
-			System.out.println("--------------------------------------------------------------------------------");
-			System.out.print("Choose Sched#: ");
-			try {				scheduleChoice = Integer.parseInt(scan.nextLine());
-			}catch(NumberFormatException e) {
-				e.printStackTrace();
-				System.out.println("ERROR: Invalid no. of seats");
-			}
-			
-			reservedSeats = dbc.getSeats(scheduleChoice, "Seat");
-			updateSeats(reservedSeats, currentSeats);
-			
+				System.out.print("Choose Sched#: ");
+				try {
+					if(rs.next()) {
+						scheduleChoice = Integer.parseInt(scan.nextLine());
+						do{
+							if(rs.getInt("cid") == scheduleChoice) {
+								reservation.getSchedule().getCinema().setCinemaId(rs.getInt("cid"));
+								reservation.getSchedule().getCinema().setCinemaNum(rs.getInt("Cinema"));
+							}
+						}while(rs.next());
+					}else {
+						System.out.println("Exiting...");
+						break start;
+					}
+					
+				}catch(NumberFormatException e) {
+					e.printStackTrace();
+					System.out.println("ERROR: Invalid no. of seats");
+				} catch (SQLException e) {
+					e.printStackTrace();
+					System.out.println("ERROR: Having problems with the database. Exiting...");
+					break start;
+				}
+				
+				reservedSeats = dbc.getSeats(scheduleChoice, "Seat");
+				updateSeats(reservedSeats, currentSeats);
+				
+		
+				System.out.println("--------------------------------------------------------------------------------");
+				printSeats(currentSeats);
+				System.out.println("--------------------------------------------------------------------------------");
+				System.out.print("No. of available seats: " + (numberOfSeats - reservedSeats.size()));
+				System.out.println("\n--------------------------------------------------------------------------------");
+				System.out.print("No. of seats to reserve: ");
+				try {
+					numberOfSeatsToReserve = Integer.parseInt(scan.nextLine());
+				}catch(NumberFormatException e) {
+					e.printStackTrace();
+					System.out.println("ERROR: Invalid no. of seats");
+				}			
+				
+				for(int i = 0; i < numberOfSeatsToReserve; i++) {
+					System.out.print("Seat #" + (i + 1) + ":\t");
+					seatChoices.add(new Seat(scan.nextLine()));
+				}
+				System.out.println("--------------------------------------------------------------------------------");
+				System.out.println("Specify no. guest(s) for each type");
+				System.out.println("--------------------------------------------------------------------------------");
+				
+				specifyGuests: while(true) {
+					numOfKids = 0;
+					numOfRegulars = 0;
+					numOfSeniors = 0;
+					try {
+						System.out.print("No. of kid(s):\t");
+						numOfKids = Integer.parseInt(scan.nextLine());
+						numberOfSeats -= numOfKids;
+						guestCount += numOfKids;
+						for(int m = 0; m < numOfKids; m++) {
+							//System.out.println("--------------------------------------------------------------------------------");
+							//System.out.print("Name of Customer: ");
+							guests.add(new Kid(scan.nextLine()));
+							//System.out.println("--------------------------------------------------------------------------------");
+						}
+						if(guestCount != numberOfSeatsToReserve) {
+							System.out.print("No. of regular(s):\t");
+							numOfRegulars = Integer.parseInt(scan.nextLine());
+							numberOfSeats -= numOfRegulars;								//
+							for(int n = 0; n < numOfRegulars; n++) {
+								//System.out.println("--------------------------------------------------------------------------------");
+								//System.out.print("Name of Customer: ");
+								guests.add(new Guest(scan.nextLine()));
+								//System.out.println("--------------------------------------------------------------------------------");
+							}
+							if(guestCount != numberOfSeatsToReserve) {
+								System.out.print("No. of senior(s):\t");
+								numOfSeniors = Integer.parseInt(scan.nextLine());
+								numberOfSeats -= numOfSeniors;
+								for(int o = 0; o < numOfSeniors; o++) {
+									//System.out.println("--------------------------------------------------------------------------------");
+									//System.out.print("Name of Customer: ");
+									guests.add(new Senior(scan.nextLine()));
+									//System.out.println("--------------------------------------------------------------------------------");
+								}
+							}
+						}
+						if(guestCount == numberOfSeatsToReserve) {
+							break specifyGuests;
+						}else if(guestCount > numberOfSeatsToReserve){
+							System.out.println("ERROR: You have enumerated " + (guestCount - numberOfSeatsToReserve) + " more no. of guest(s). Reverting...\n"
+									+ "Please input the number of guest for each category again." );
+						}else {
+							System.out.println("ERROR: You have enumerated " + (numberOfSeatsToReserve - guestCount) + " less no. of guest(s). Reverting...\n"
+									+ "Please input the number of guest for each category again." );
+						}
+					}catch(NumberFormatException e) {
+						e.printStackTrace();
+						System.out.println("ERROR: Invalid no. guests");
+					}
+				}				
 
-			System.out.println("--------------------------------------------------------------------------------");
-			printSeats(currentSeats);
-			System.out.println("--------------------------------------------------------------------------------");
-			System.out.print("No. of available seats: " + (numberOfSeats - reservedSeats.size()));
-			System.out.println("\n--------------------------------------------------------------------------------");
-			System.out.print("No. of seats to reserve: ");
-			try {
-				numberOfSeatsToReserve = Integer.parseInt(scan.nextLine());
-			}catch(NumberFormatException e) {
-				e.printStackTrace();
-				System.out.println("ERROR: Invalid no. of seats");
-			}			
-			
-			for(int i = 0; i < numberOfSeatsToReserve; i++) {
-				System.out.print("Seat #" + (i + 1) + ":\t");
-				seatChoice.add(new Seat(scan.nextLine()));
-			}
-			System.out.println("--------------------------------------------------------------------------------");
-			System.out.println("Specify no. guest(s) for each type");
-			System.out.println("--------------------------------------------------------------------------------");
-			System.out.print("No. of kid(s):\t");
-			try {
-				numOfKids = Integer.parseInt(scan.nextLine());
-				numberOfSeats = numOfKids;
-				for(int i = 0; i < numOfKids; i++) {
-					System.out.println("--------------------------------------------------------------------------------");
-					System.out.print("Name of Customer: ");
-					guest.add(new Kid(scan.nextLine()));
-					System.out.println("--------------------------------------------------------------------------------");
+				
+				/*===========+===========+===========+===========+===========+===========*/
+				/*						 SAVE TRANSACTION TO DATABASE					 */
+				/*===========+===========+===========+===========+===========+===========*/
+				
+				for(Guest guest: guests) {
+					totalAmount += guest.getRate();
 				}
-				System.out.print("No. of regular(s):\t");
-				numOfRegulars = Integer.parseInt(scan.nextLine());
-				numberOfSeats += numOfRegulars;
-				System.out.print("No. of senior(s):\t");
-				numOfSeniors = Integer.parseInt(scan.nextLine());
-				numberOfSeats += numOfSeniors;
-			}catch(NumberFormatException e) {
-				e.printStackTrace();
-				System.out.println("ERROR: Invalid no. guests");
+				
+				System.out.println("===========+===========+===========+===========" + 
+								   "\tTRANSACTION SUMMARY\n" + 
+								   "===========+===========+===========+===========");
+				System.out.println("Category\t\tQuantity\tAmount");
+				if(0 < numOfRegulars) {
+					System.out.print("Regular\t\t₱" + Guest.REGULAR_RATE + "\t"+ numOfKids +"\t₱ "+ Guest.REGULAR_RATE*numOfRegulars);
+				}
+				if(0 < numOfKids) {
+					System.out.print("Kid\t\t₱ " + Guest.KID_RATE + "\t"+ numOfKids +"\t₱ "+ Guest.KID_RATE*numOfKids);
+				}
+				if(0 < numOfSeniors) {
+					System.out.print("Senior\t\t₱ " + Guest.SENIOR_RATE + "\t"+ numOfKids +"\t₱ "+ Guest.KID_RATE*numOfSeniors);
+				}
+				System.out.print("Total\t\t\t\t\t\t₱ "+ totalAmount);
+				
+				
+				
+				/*===========+===========+===========+===========+===========+===========*/
+				/*						    CONFIRM TRANSACTION	?						 */
+				/*===========+===========+===========+===========+===========+===========*/
+				tries = 0;
+				confirm: while(true) {
+					System.out.println("--------------------------------------------------------------------------------");
+					System.out.print("Proceed with this transaction? (Y/N): ");
+					confirmChoice = scan.nextLine();
+					System.out.println("--------------------------------------------------------------------------------");
+					
+					if(confirmChoice.equalsIgnoreCase("y")) {
+						System.out.println("--------------------------------------------------------------------------------");
+						System.out.print("Name of Customer: ");
+						customerName = scan.nextLine();
+						for(Guest guest: guests) {
+							guest.setName(customerName);
+							reservation.setGuest(guest);
+							dbc.insertToDB(reservation);
+						}
+						System.out.println("DONE\n\n\n");
+						
+						break confirm;
+					}else if(confirmChoice.equalsIgnoreCase("n")) {
+						System.out.println("Canceling transaction...");
+						break start;
+					}else {
+						System.out.println("Invalid...");
+						tries++;
+						if(tries >= 3) {
+							System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+							break start;
+						}
+						continue;							//optional
+					}
+				}				
 			}
+			
+			
 			
 			
 //			System.out.println("--------------------------------------------------------------------------------");

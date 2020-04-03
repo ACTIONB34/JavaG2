@@ -7,7 +7,10 @@ public class Reservation {
 	private Schedule schedule;
 	
 	public Reservation() {
-		
+		this.reservationId = -1;
+		this.guest = new Guest();
+		this.seat = new Seat();
+		this.schedule = new Schedule();
 	}
 	
 	public Reservation(int initId, Guest initGuest, Seat initSeat, Schedule initSched) {

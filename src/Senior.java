@@ -3,12 +3,13 @@ public class Senior extends Guest {
 
 	public Senior() {
 		super();
-		super.setRate(120.00);
+		super.setRate(super.SENIOR_RATE);
 		super.setType(super.SENIOR);
 	}
 	
 	public Senior(String initName) {
-		super(initName, 120.00);
+		super(initName);
+		super.setRate(super.SENIOR_RATE);
 		super.setType(super.SENIOR);
 	}
 

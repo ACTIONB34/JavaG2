@@ -2,7 +2,10 @@
 public class Guest {
 	final static public int REGULAR = 1;
 	final static public int KID = 2;
-	final static public int SENIOR = 3;	
+	final static public int SENIOR = 3;
+	final static public double REGULAR_RATE = 150.0;
+	final static public double KID_RATE = 100.0;
+	final static public double SENIOR_RATE = 120.0;	
 	
 	private String name;
 	private int type;
@@ -11,13 +14,13 @@ public class Guest {
 	public Guest() {
 		this.name = new String();
 		this.type = this.REGULAR;
-		this.rate = 150;
+		this.rate = this.REGULAR_RATE;
 	}
 	
 	public Guest(String initName) {
 		this.name = initName;
 		this.type = this.REGULAR;
-		this.rate = 150;
+		this.rate = this.REGULAR_RATE;
 	}	
 
 	public Guest(String initName, double initRate) {

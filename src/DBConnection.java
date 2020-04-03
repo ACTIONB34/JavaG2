@@ -19,7 +19,7 @@ public class DBConnection{
 									 "LEFT JOIN movies AS m ON s.movie_id = m.movie_id " + 
 									 "WHERE s.movie_id = ? AND CAST(s.sched_date AS DATE) = ?";
 	final private String GET_SEATS = "SELECT r.seat AS 'Seat' FROM reservations AS r WHERE r.sched_id = ?";
-	
+	final private int MAX_LEN = 40;
 	
 	private Connection conn;
 	private Statement smt;
@@ -90,8 +90,8 @@ public class DBConnection{
 					    	System.out.print("\t");
 				    	}
 		    		}else {
-		    			if((rs.getString(column)).length() > 64) {
-		    				System.out.print(rs.getString(column).substring(0, 60) + "...\t");
+		    			if((rs.getString(column)).length() > MAX_LEN) {
+		    				System.out.print(rs.getString(column).substring(0, MAX_LEN-1) + "...\t");
 		    			}else {
 		    				System.out.print(rs.getString(column) + "\t");
 		    			}
@@ -206,16 +206,19 @@ public class DBConnection{
 		    }
 	    	System.out.println();
 		    //rs.beforeFirst();
-		    while(rs.next()) {
-		    	for(String column: columns) {
-				    System.out.print(rs.getString(column) + "\t");
-		    	}
-		    	System.out.println();
-		    }
+	    	if(rs.next()) {
+			    do{
+			    	for(String column: columns) {
+					    System.out.print(rs.getString(column) + "\t");
+			    	}
+			    	System.out.println();
+			    }while(rs.next());
+	    	}else {
+		    	System.out.println("No schedules found");
+	    	}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	    
+		}
 	    return this.rs;
 	}
 	
@@ -225,10 +228,10 @@ public class DBConnection{
 			PreparedStatement ps = this.conn.prepareStatement(GET_SEATS);
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
-		    while(rs.next()) {
-//		    	System.out.println(rs.getString(column));
-		    	reservedSeats.add(rs.getString(column));
-		    }
+
+	    	if(rs.next()) {
+	    		reservedSeats.add(rs.getString(column));
+	    	}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

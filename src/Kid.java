@@ -3,12 +3,13 @@ public class Kid extends Guest {
 	
 	public Kid() {
 		super();
-		super.setRate(100.00);
+		super.setRate(super.KID_RATE);
 		super.setType(super.KID);
 	}
 	
 	public Kid(String initName) {
-		super(initName, 100.00);
+		super(initName);
+		super.setRate(super.KID_RATE);;
 		super.setType(super.KID);
 	}
 

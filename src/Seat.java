@@ -12,6 +12,10 @@ public class Seat {
 		};
 	
 	private String seatCode;
+
+	public Seat() {
+		this.seatCode = null;
+	}
 	
 	public Seat(String seatCode) {
 		this.seatCode = seatCode;
