@@ -27,16 +27,11 @@ public class MRSystem {
 	private int numOfKids;
 	private int numOfRegulars;
 	private int numOfSeniors;
-	private int guestCount;
 	private int totalAmount;
-	private int inputSeatCount;
-	private String tempDate;
 	private String customerName;
 	private Date dateToReserve;
 	private Seat[] currentSeats;
-	private String seatTemp;
 	private String confirmChoice;
-	private String dateChoice;
 	
 	public MRSystem() {
 		init();
@@ -52,11 +47,181 @@ public class MRSystem {
 			displaySeats();
 			if(getNumberOfSeats()){	break;	}
 			if(chooseSeats()) {		break;	}
-			
+			if(specifyGuests()) {	break;	}
+			saveToDB();
+			if(confirmTransaction()) {	break;	}
 		}
 	}
-	private boolean chooseSeats() {
+	private boolean confirmTransaction() {
+		/*===========+===========+===========+===========+===========+===========*/
+		/*						    CONFIRM TRANSACTION	?						 */
+		/*===========+===========+===========+===========+===========+===========*/
+		int tries = 0;
 		
+		while(true) {
+			System.out.println("--------------------------------------------------------------------------------");
+			System.out.print("Proceed with this transaction? (Y/N): ");
+			confirmChoice = scan.nextLine();
+			System.out.println("--------------------------------------------------------------------------------");
+			
+			if(confirmChoice.equalsIgnoreCase("y")) {
+				System.out.println("--------------------------------------------------------------------------------");
+				System.out.print("Name of Customer: ");
+				customerName = scan.nextLine();
+				
+				for(int i = 0; i < guests.size(); i++) {
+					Guest guest = guests.get(i);
+					guest.setName(customerName);
+					reservation.setSeat(seatChoices.get(i));
+					reservation.setGuest(guest);
+					dbc.insertToDB(reservation);
+				}
+				System.out.println("DONE\n\n\n");
+				break;
+			}else if(confirmChoice.equalsIgnoreCase("n")) {
+				System.out.println("Canceling transaction...");
+				return true;
+			}else {
+				System.out.println("Invalid...");
+				tries++;
+				if(tries >= 3) {
+					System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+					return true;
+				}
+			}
+		}			
+		return false;
+	}
+
+	private void saveToDB() {
+		for(Guest guest: guests) {
+			totalAmount += guest.getRate();
+		}
+		
+		System.out.println("===========+===========+===========+===========\n" + 
+						   "\t\tTRANSACTION SUMMARY\n" + 
+						   "===========+===========+===========+===========");
+		System.out.println("Category\tRate\tQuantity\tAmount");
+		if(0 < numOfRegulars) {
+			System.out.println("Regular\t\t" + Guest.REGULAR_RATE + "\t"+ numOfRegulars +"\t\t"+ Guest.REGULAR_RATE*numOfRegulars);
+		}
+		if(0 < numOfKids) {
+			System.out.println("Kid\t\t" + Guest.KID_RATE + "\t"+ numOfKids +"\t\t"+ Guest.KID_RATE*numOfKids);
+		}
+		if(0 < numOfSeniors) {
+			System.out.println("Senior\t\t" + Guest.SENIOR_RATE + "\t"+ numOfSeniors +"\t\t"+ Guest.KID_RATE*numOfSeniors);
+		}
+		System.out.println("Total:\t\t\t\t\t"+ totalAmount);
+	}
+
+	private boolean specifyGuests() {
+		int seatsRemaining = numberOfSeatsToReserve;
+		
+		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println("Specify no. guest(s) for each type");
+		System.out.println("--------------------------------------------------------------------------------");
+		
+		
+		while(true) {
+			numOfKids = getNumGuests("Kid", seatsRemaining);
+			if (numOfKids == -1){	return true;	}
+			else {	seatsRemaining -= numOfKids;	}
+			
+			numOfRegulars = getNumGuests("Regular", seatsRemaining);
+			if (numOfRegulars == -1){	return true;	}
+			else {	seatsRemaining -= numOfRegulars;	}
+			
+			numOfSeniors = getNumGuests("Senior", seatsRemaining);
+			if (numOfRegulars == -1){	return true;	}
+			else {	seatsRemaining -= numOfSeniors;		}
+			
+			if(seatsRemaining > 0) {
+				System.out.println("ERROR: You have enumerated " + (numberOfSeatsToReserve - seatsRemaining) + " guests only. Reverting...\n");
+				continue;
+			}else {
+				numberOfSeats -= numOfKids - numOfRegulars - numOfSeniors;
+				
+				for(int m = 0; m < numOfKids; m++) {
+					guests.add(new Kid(customerName));
+				}
+				for(int n = 0; n < numOfRegulars; n++) {
+					guests.add(new Guest(customerName));
+				}
+				for(int o = 0; o < numOfSeniors; o++) {
+					guests.add(new Senior(customerName));
+				}
+				break;
+			}
+		}
+		return false;
+	}
+	
+	private int getNumGuests(String guestType, int seatsRemaining) { 
+		int guestCount;
+		boolean askingCount = true;
+		int tries = 0;
+		
+		while(askingCount) {
+			try {
+				if(tries >= 3) {
+					System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+					return -1;
+				}
+				
+				System.out.print("No. of " + guestType + "(s):\t");
+				guestCount = Integer.parseInt(scan.nextLine());
+				if(guestCount < 0) {
+					System.out.println(guestType + " count given was a negative number. Try again!");
+					tries++;
+					continue;
+				}else if(guestCount > seatsRemaining) {
+					System.out.println(guestType + " count given was greater than given Reserved Seats. Try again!");
+					tries++;
+					continue;
+				}
+				return guestCount;
+			}catch(Exception ex) {
+				System.out.println("Invalid Format for "+ guestType+ " count. Try again!");
+				tries++;
+			}
+		}
+		return -1;
+	}
+
+	private boolean chooseSeats() {
+		int tries = 0;
+		boolean choosingSeats = true;
+		int seatCount = 0;
+		
+		while(choosingSeats) {
+			try {
+				if(tries >= 3) {
+					System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
+					return true;
+				}
+				
+				System.out.print("Seat #" + (seatCount + 1) + ": ");
+				String tempSeat = scan.nextLine().toUpperCase();
+				if(!tempSeat.matches("[A-E][1-8]")) {
+					System.out.println("ERROR: Invalid Seat Location");
+					tries++;
+					continue;
+				}else if(reservedSeats.contains(tempSeat)) {
+					System.out.println("ERROR: Seat is already taken");
+					tries++;
+					continue;
+				}
+				seatChoices.add(new Seat(tempSeat));
+				seatCount++;
+				tries = 0;
+				if(seatCount >= numberOfSeatsToReserve) {
+					choosingSeats = false;
+				}
+			}catch(Exception ex) {
+				System.out.println("ERROR: Invalid no. of seats");
+				tries++;
+			}
+		}
 		return false;
 	}
 
@@ -254,16 +419,11 @@ public class MRSystem {
 		scheduleChoice = -1;
 		numberOfSeats = 40;
 		numberOfSeatsToReserve = 0;
-		guestCount = 0;
 		totalAmount = 0;
-		inputSeatCount = 0;
-		tempDate = null;
 		customerName = "";
 		dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
 		currentSeats = Seat.seats;
-		seatTemp = "";
 		confirmChoice = null;
-		dateChoice = null;
 	}
 	
 	private void printSeats(Seat[] seats) {
