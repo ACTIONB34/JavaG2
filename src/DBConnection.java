@@ -77,7 +77,6 @@ public class DBConnection{
 	    		}
 		    }
 	    	System.out.println();
-		    //rs.beforeFirst();
 		    while(rs.next()) {
 		    	for(String column: columns) {
 		    		if(column.equals(lengthyColumn)) {
