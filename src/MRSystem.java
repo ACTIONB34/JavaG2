@@ -77,10 +77,10 @@ public class MRSystem {
 					dbc.insertToDB(reservation);
 				}
 				System.out.println("DONE\n\n\n");
-				break;
+				return true;
 			}else if(confirmChoice.equalsIgnoreCase("n")) {
 				System.out.println("Canceling transaction...");
-				return true;
+				return false;
 			}else {
 				System.out.println("Invalid...");
 				tries++;
@@ -89,8 +89,7 @@ public class MRSystem {
 					return true;
 				}
 			}
-		}			
-		return false;
+		}
 	}
 
 	private void saveToDB() {
