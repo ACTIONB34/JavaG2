@@ -132,7 +132,7 @@ public class MRSystem {
 			else {	seatsRemaining -= numOfRegulars;	}
 			
 			numOfSeniors = getNumGuests("Senior", seatsRemaining);
-			if (numOfRegulars == -1){	return true;	}
+			if (numOfSeniors == -1){	return true;	}
 			else {	seatsRemaining -= numOfSeniors;		}
 			
 			if(seatsRemaining > 0) {
