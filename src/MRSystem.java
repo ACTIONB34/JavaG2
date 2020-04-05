@@ -77,7 +77,7 @@ public class MRSystem {
 					dbc.insertToDB(reservation);
 				}
 				System.out.println("DONE\n\n\n");
-				return true;
+				return false;
 			}else if(confirmChoice.equalsIgnoreCase("n")) {
 				System.out.println("Canceling transaction...");
 				return false;
