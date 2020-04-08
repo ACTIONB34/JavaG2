@@ -37,7 +37,6 @@ public class MRSystem {
 	}
 	
 	public void start(){
-		dbc.open();
 		main: while(true) {		
 			selectMovie: while(true) {
 				displayMovies();
@@ -95,7 +94,6 @@ public class MRSystem {
 					reservation.setGuest(guest);
 					dbc.insertToDB(reservation);
 				}
-				dbc.close();
 				System.out.println("DONE\n\n\n");
 				return false;
 			}else if(confirmChoice.equalsIgnoreCase("n")) {

@@ -38,9 +38,7 @@ public class DBConnection{
 		this.psmt_sched = null;
 		this.psmt_reserv = null;
 		this.rs = null;
-	}
-	
-	private void connect() {
+		
 		try {
 		    conn = DriverManager.getConnection("jdbc:mysql://localhost/mrsdb?useUnicode=true&"
 		    		+ "useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
@@ -59,10 +57,6 @@ public class DBConnection{
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
-	}
-	
-	public void open() {
-		connect();
 	}
 	
 	public ResultSet excecuteAndPrint(String query, String lengthyColumn, int maxLength, String... columns) {
