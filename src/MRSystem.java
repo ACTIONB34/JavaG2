@@ -316,7 +316,7 @@ public class MRSystem {
 		updateSeats(reservedSeats, currentSeats);			
 		
 
-		System.out.println("--------------------------------------------------------------------------------" + reservedSeats.size());
+		System.out.println("--------------------------------------------------------------------------------");
 		printSeats(currentSeats);
 		System.out.println("--------------------------------------------------------------------------------");
 		System.out.print("No. of available seats: " + (numberOfSeats - reservedSeats.size()));
