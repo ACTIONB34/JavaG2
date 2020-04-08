@@ -124,48 +124,33 @@ public class MRSystem {
 		while(true) {
 			numOfKids = getNumGuests("Kid", seatsRemaining);
 			if (numOfKids == -1){
-				tries++;
-				if(tries >= 3) {
-					System.out.println("ERROR: You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
-					return true;
-				}else {
-					System.out.println("You have provided invalid input. Try again\n\n");
-					continue;
-				}
+				return true;
 			}else {
 				seatsRemaining -= numOfKids;
 			}
 			
 			numOfRegulars = getNumGuests("Regular", seatsRemaining);
 			if (numOfRegulars == -1){
-				tries++;
-				if(tries >= 3) {
-					System.out.println("ERROR: You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
-					return true;
-				}else {
-					System.out.println("You have provided invalid input. Try again\n\n");
-					continue;
-				}
+				return true;
 			}else {
 				seatsRemaining -= numOfRegulars;
 			}
 			
 			numOfSeniors = getNumGuests("Senior", seatsRemaining);
 			if (numOfSeniors == -1){
-				tries++;
-				if(tries >= 3) {
-					System.out.println("ERROR: You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
-					return true;
-				}else {
-					System.out.println("You have provided invalid input. Try again\n\n");
-					continue;
-				}
+				System.out.println("ERROR: You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
 			}else {
 				seatsRemaining -= numOfSeniors;
 			}
 			
 			if(seatsRemaining > 0) {
-				System.out.println("ERROR: You have enumerated " + (numberOfSeatsToReserve - seatsRemaining) + " guests only. Reverting...\n");
+				if(tries >= 3) {
+					System.out.println("ERROR: You have enumerated tried this multiple times already. Exiting...\n");
+					return true;
+				}else {
+					tries++;
+					System.out.println("ERROR: You have enumerated " + (numberOfSeatsToReserve - seatsRemaining) + " guests only. Reverting...\n");
+				}
 				continue;
 			}else {
 				numberOfSeats -= numOfKids - numOfRegulars - numOfSeniors;
