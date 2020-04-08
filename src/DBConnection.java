@@ -168,7 +168,6 @@ public class DBConnection{
 			this.psmt_reserv.setInt(4, reservation.getSchedule().getSchedID());
 			
 			returnValue = this.psmt_reserv.executeUpdate();
-			this.conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

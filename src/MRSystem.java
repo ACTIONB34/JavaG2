@@ -69,6 +69,7 @@ public class MRSystem {
 			}
 		}
 	}
+	
 	private boolean confirmTransaction() {
 		/*===========+===========+===========+===========+===========+===========*/
 		/*						    CONFIRM TRANSACTION	?						 */
@@ -126,7 +127,7 @@ public class MRSystem {
 			System.out.println("Kid\t\t" + Guest.KID_RATE + "\t"+ numOfKids +"\t\t"+ Guest.KID_RATE*numOfKids);
 		}
 		if(0 < numOfSeniors) {
-			System.out.println("Senior\t\t" + Guest.SENIOR_RATE + "\t"+ numOfSeniors +"\t\t"+ Guest.KID_RATE*numOfSeniors);
+			System.out.println("Senior\t\t" + Guest.SENIOR_RATE + "\t"+ numOfSeniors +"\t\t"+ Guest.SENIOR_RATE*numOfSeniors);
 		}
 		System.out.println("Total:\t\t\t\t\t"+ totalAmount);
 	}
