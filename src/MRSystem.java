@@ -49,9 +49,9 @@ public class MRSystem {
 						System.out.println("Exiting...");
 						break main;
 					case 1:
-						continue selectMovie;
-					case 2:
 						continue selectDate;
+					case 2:
+						continue selectMovie;
 					case 3:
 						break selectDate;
 					default:
@@ -92,6 +92,7 @@ public class MRSystem {
 					reservation.setSeat(seatChoices.get(i));
 					reservation.setGuest(guest);
 					dbc.insertToDB(reservation);
+					dbc.close();
 				}
 				System.out.println("DONE\n\n\n");
 				return false;
@@ -170,7 +171,7 @@ public class MRSystem {
 				}
 				continue;
 			}else {
-				numberOfSeats -= numOfKids - numOfRegulars - numOfSeniors;
+				numberOfSeats -= numOfKids + numOfRegulars + numOfSeniors;
 				
 				for(int m = 0; m < numOfKids; m++) {
 					guests.add(new Kid(customerName));
@@ -290,9 +291,10 @@ public class MRSystem {
 
 	private void displaySeats() {
 		reservedSeats = dbc.getSeats(scheduleChoice, "Seat");
-		updateSeats(reservedSeats, currentSeats);				
+		updateSeats(reservedSeats, currentSeats);			
+		
 
-		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println("--------------------------------------------------------------------------------" + reservedSeats.size());
 		printSeats(currentSeats);
 		System.out.println("--------------------------------------------------------------------------------");
 		System.out.print("No. of available seats: " + (numberOfSeats - reservedSeats.size()));
