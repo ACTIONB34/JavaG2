@@ -37,8 +37,8 @@ public class MRSystem {
 	
 	public void start(){
 		main: while(true) {	
-			init();
 			selectMovie: while(true) {
+				init();
 				displayMovies();
 				if(chooseMovie()){		break main;	}
 				selectDate: while(true) {
@@ -168,10 +168,12 @@ public class MRSystem {
 				}else {
 					tries++;
 					System.out.println("ERROR: You have enumerated " + (numberOfSeatsToReserve - seatsRemaining) + " guests only. Reverting...\n");
+					seatsRemaining +=  numOfRegulars + numOfSeniors + numOfKids;
+					numOfRegulars = numOfSeniors = numOfKids = 0; 
 				}
 				continue;
 			}else {
-				numberOfSeats -= numOfKids + numOfRegulars + numOfSeniors;
+				//numberOfSeats -= numOfKids + numOfRegulars + numOfSeniors;
 				
 				for(int m = 0; m < numOfKids; m++) {
 					guests.add(new Kid(customerName));
@@ -199,7 +201,6 @@ public class MRSystem {
 					System.out.println("You have given invalid input thrice(3). Exiting...\n\n\n\n\n");
 					return -1;
 				}
-				
 				System.out.print("No. of " + guestType + "(s):\t");
 				guestCount = Integer.parseInt(scan.nextLine());
 				if(guestCount < 0) {
@@ -225,6 +226,7 @@ public class MRSystem {
 		boolean choosingSeats = true;
 		int seatCount = 0;
 		
+		System.out.println("(Input \'x\' if you want to remove the previous seat)");
 		while(choosingSeats) {
 			try {
 				if(tries >= 3) {
@@ -318,7 +320,7 @@ public class MRSystem {
 
 		System.out.println("--------------------------------------------------------------------------------");
 		printSeats(currentSeats);
-		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println("--------------------------------------------------------------------------------" + reservedSeats.size());
 		System.out.print("No. of available seats: " + (numberOfSeats - reservedSeats.size()));
 		System.out.println("\n--------------------------------------------------------------------------------");
 	}
@@ -487,8 +489,11 @@ public class MRSystem {
 		reservation = new Reservation();
 		
 		guests = new ArrayList<Guest>();
+		guests.clear();
 		seatChoices = new ArrayList<Seat>();
+		seatChoices.clear();
 		reservedSeats = new ArrayList<String>();
+		reservedSeats.clear();
 		
 		movieChoice = -1;
 		scheduleChoice = -1;
