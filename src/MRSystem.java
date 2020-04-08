@@ -1,4 +1,3 @@
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,18 +37,36 @@ public class MRSystem {
 	}
 	
 	public void start(){
-		while(true) {		
-			displayMovies();
-			if(chooseMovie()){		break;	}
-			if(chooseDate()){		break;	}
-			displaySchedule();
-			if(chooseSchedule()){	break;	}
-			displaySeats();
-			if(getNumberOfSeats()){	break;	}
-			if(chooseSeats()) {		break;	}
-			if(specifyGuests()) {	break;	}
-			saveToDB();
-			if(confirmTransaction()) {	break;	}
+		main: while(true) {		
+			selectMovie: while(true) {
+				displayMovies();
+				if(chooseMovie()){		break main;	}
+				selectDate: while(true) {
+					if(chooseDate()){		break main;	}
+					int choice = displaySchedule();
+					switch(choice) {
+					case 0:
+						System.out.println("Exiting...");
+						break main;
+					case 1:
+						continue selectMovie;
+					case 2:
+						continue selectDate;
+					case 3:
+						break selectDate;
+					default:
+						System.out.println("ERROR: Invalid input. Exiting...");
+						break main;
+					}
+				}
+				if(chooseSchedule()){	break main;	}
+				displaySeats();
+				if(getNumberOfSeats()){	break main;	}
+				if(chooseSeats()) {		break main;	}
+				if(specifyGuests()) {	break main;	}
+				saveToDB();
+				if(confirmTransaction()) {	break main;	}
+			}
 		}
 	}
 	private boolean confirmTransaction() {
@@ -321,11 +338,30 @@ public class MRSystem {
 		return false;
 	}
 
-	private void displaySchedule() {
+	private int displaySchedule() {
 		System.out.println("SELECT A SCHEDULE");
 		System.out.println("--------------------------------------------------------------------------------");
 		rs = dbc.viewSched(dateToReserve, movieChoice, "Sched#", "Cinema", "Time Showing", "Movie");
 		System.out.println("--------------------------------------------------------------------------------");
+		int choice = 3;
+		try {
+			if(!rs.next()) {
+				System.out.print("Would you like to select a different schedule:\n"
+						+ "1 - Yes. Take me back to the previous menu.\n"
+						+ "2 - No. I want to select another movie.\n"
+						+ "0 - EXIT\n"
+						+ "CHOICE: ");				
+				try {
+					choice = Integer.parseInt(scan.nextLine());
+				}catch(NumberFormatException e) {
+					choice = -1;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return choice; 
 	}
 	
 	private boolean chooseDate() {
@@ -348,13 +384,13 @@ public class MRSystem {
 			String tempDate = scan.nextLine();
 			try {
 				if(tempDate.matches("\\d\\d\\d\\d-\\d\\d-\\d\\d"))
-	        		tempDate = tempDate + " 00:00";
+	        		tempDate = tempDate + " 23:00";
 				
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     			dateTime = LocalDateTime.parse(tempDate, formatter);
     			
     			if(dateTime.isBefore(now)){
-    				System.out.println("ERROR: This was the past. Why go back?");
+    				System.out.println("ERROR: You cannot reserve seat(s) on past dates. Enter a valid date...");
     				tries++;
     				continue;
     			}
