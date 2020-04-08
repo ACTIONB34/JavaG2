@@ -93,13 +93,12 @@ public class MRSystem {
 					reservation.setSeat(seatChoices.get(i));
 					reservation.setGuest(guest);
 					dbc.insertToDB(reservation);
-					dbc.close();
 				}
 				System.out.println("DONE\n\n\n");
 				return false;
 			}else if(confirmChoice.equalsIgnoreCase("n")) {
 				System.out.println("Canceling transaction...");
-				
+				init();
 				return false;
 			}else {
 				System.out.println("Invalid...");
