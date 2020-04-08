@@ -242,7 +242,12 @@ public class MRSystem {
 					System.out.println("ERROR: Seat is already taken");
 					tries++;
 					continue;
+				}else if(findSeat(tempSeat)) {
+					System.out.println("ERROR: You already inputted this seat.");
+					tries++;
+					continue;
 				}
+				
 				seatChoices.add(new Seat(tempSeat));
 				seatCount++;
 				tries = 0;
@@ -252,6 +257,15 @@ public class MRSystem {
 			}catch(Exception ex) {
 				System.out.println("ERROR: Invalid no. of seats");
 				tries++;
+			}
+		}
+		return false;
+	}
+	
+	private boolean findSeat(String tempSeat) {
+		for(Seat s: seatChoices) {
+			if(s.getSeatNum().equals(tempSeat)) {
+				return true;
 			}
 		}
 		return false;
