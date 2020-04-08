@@ -237,7 +237,7 @@ public class MRSystem {
 				if(tempSeat.equalsIgnoreCase("x")) {
 					if( seatChoices.size() > 0 ) {
 						seatChoices.remove( seatChoices.size() - 1 );
-						seatCount++;
+						seatCount--;
 					}
 					continue;
 				}
