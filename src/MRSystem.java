@@ -99,6 +99,7 @@ public class MRSystem {
 				return false;
 			}else if(confirmChoice.equalsIgnoreCase("n")) {
 				System.out.println("Canceling transaction...");
+				
 				return false;
 			}else {
 				System.out.println("Invalid...");
@@ -235,6 +236,14 @@ public class MRSystem {
 				
 				System.out.print("Seat #" + (seatCount + 1) + ": ");
 				String tempSeat = scan.nextLine().toUpperCase();
+				if(tempSeat.equalsIgnoreCase("x")) {
+					if( seatChoices.size() > 0 ) {
+						seatChoices.remove( seatChoices.size() - 1 );
+						seatCount++;
+					}
+					continue;
+				}
+					
 				if(!tempSeat.matches("[A-E][1-8]")) {
 					System.out.println("ERROR: Invalid Seat Location");
 					tries++;
