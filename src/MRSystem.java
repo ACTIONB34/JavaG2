@@ -298,8 +298,8 @@ public class MRSystem {
 					System.out.println("ERROR: Input a number greater than 0.");
 					tries++;
 					continue;
-				}else if(numberOfSeatsToReserve > numberOfSeats){
-					System.out.println("ERROR: The number of seats you entered exceeds the remaining available seats. [Available Seats: " + numberOfSeats + "]");
+				}else if(numberOfSeatsToReserve > numberOfSeats - reservedSeats.size()){
+					System.out.println("ERROR: The number of seats you entered exceeds the remaining available seats. [Available Seats: " + (numberOfSeats - reservedSeats.size()) + "]");
 					tries++;
 					continue;
 				}else {
@@ -320,7 +320,7 @@ public class MRSystem {
 
 		System.out.println("--------------------------------------------------------------------------------");
 		printSeats(currentSeats);
-		System.out.println("--------------------------------------------------------------------------------" + reservedSeats.size());
+		System.out.println("--------------------------------------------------------------------------------");
 		System.out.print("No. of available seats: " + (numberOfSeats - reservedSeats.size()));
 		System.out.println("\n--------------------------------------------------------------------------------");
 	}
