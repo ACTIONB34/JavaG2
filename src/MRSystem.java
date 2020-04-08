@@ -384,10 +384,11 @@ public class MRSystem {
 			String tempDate = scan.nextLine();
 			try {
 				if(tempDate.matches("\\d\\d\\d\\d-\\d\\d-\\d\\d"))
-	        		tempDate = tempDate + " 23:00";
+	        		tempDate = tempDate + " 00:00";
 				
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     			dateTime = LocalDateTime.parse(tempDate, formatter);
+    			dateTime = dateTime.plusDays(1);
     			
     			if(dateTime.isBefore(now)){
     				System.out.println("ERROR: You cannot reserve seat(s) on past dates. Enter a valid date...");
