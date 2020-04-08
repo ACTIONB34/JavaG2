@@ -37,6 +37,7 @@ public class MRSystem {
 	}
 	
 	public void start(){
+		dbc.open();
 		main: while(true) {		
 			selectMovie: while(true) {
 				displayMovies();
