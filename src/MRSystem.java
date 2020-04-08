@@ -33,11 +33,11 @@ public class MRSystem {
 	private String confirmChoice;
 	
 	public MRSystem() {
-		init();
 	}
 	
 	public void start(){
-		main: while(true) {		
+		main: while(true) {	
+			init();
 			selectMovie: while(true) {
 				displayMovies();
 				if(chooseMovie()){		break main;	}
@@ -98,7 +98,6 @@ public class MRSystem {
 				return false;
 			}else if(confirmChoice.equalsIgnoreCase("n")) {
 				System.out.println("Canceling transaction...");
-				init();
 				return false;
 			}else {
 				System.out.println("Invalid...");
@@ -500,6 +499,10 @@ public class MRSystem {
 		dateToReserve = new Date(Date.UTC(0, 0, 0, 0, 0, 0));
 		currentSeats = Seat.seats;
 		confirmChoice = null;
+		
+		numOfKids = 0;
+		numOfRegulars = 0;
+		numOfSeniors = 0;
 	}
 	
 	private void printSeats(Seat[] seats) {
