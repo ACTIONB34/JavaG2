@@ -98,6 +98,7 @@ public class MRSystem {
 				return false;
 			}else if(confirmChoice.equalsIgnoreCase("n")) {
 				System.out.println("Canceling transaction...");
+				init();
 				return false;
 			}else {
 				System.out.println("Invalid...");
